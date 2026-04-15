@@ -1,0 +1,305 @@
+create database Fitness_Project;
+
+use Fitness_Project;
+
+Create Table Queries
+
+-- 1st table
+create table MEMBERSHIP_PLAN
+(
+Plan_ID int primary key,
+Plan_NAME varchar(50) not null,
+Plan_DURATION varchar(20) not null,
+Plan_PRICE decimal(10,2) not null,
+Plan_DETAILS varchar(100) not null
+);
+
+desc MEMBERSHIP_PLAN;
+
+-- 2nd table
+create table MEMBER_DETAILS
+(
+Member_ID int primary key,
+Member_NAME varchar(30) not null,
+Member_AGE int not null,
+Member_GENDER enum('Female','Male','Other') not null,
+Member_CONTACT bigint check(Member_CONTACT regexp '^[0-9]{10}$') not null unique,
+Member_EMAIL varchar(30) not null unique constraint	chk check(Member_EMAIL regexp '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+Member_PLAN_ID int,
+constraint CKP foreign key FKP(Member_PLAN_ID) references MEMBERSHIP_PLAN(Plan_ID)
+);
+
+desc MEMBER_DETAILS;
+
+-- 3rd table
+create table TRAINERS_DETAILS
+(
+Trainer_ID int primary key,
+Trainer_NAME varchar(20) not null,
+Trainer_CONTACT bigint check(Trainer_CONTACT regexp '^[0-9]{10}$') not null unique,
+Trainer_SALARY decimal(10,2) not null,
+Trainer_GENDER enum('Female','Male','Other') not null,
+Trainer_PLAN_ID int not null,
+constraint abc foreign key xyz(Trainer_PLAN_ID) references MEMBERSHIP_PLAN(Plan_ID )
+);
+
+
+-- 4th table
+create table PAYMENTS_DETAILS
+(
+Payment_ID int primary key,
+Fee_AMOUNT decimal(10,2) not null,
+Member_ID int,
+Payment_DATE date not null,
+Payment_METHOD enum('CASH','UPI','NET BANKING','CHEQUE', 'Pending') not null,
+Payment_STATUS enum('Fully Paid','Partially Paid','Not Paid') not null,
+constraint mem foreign key fkp(Member_ID) references MEMBER_DETAILS(Member_ID)
+);
+
+desc PAYMENTS_DETAILS
+
+-- 5th table
+create table WORKOUT_SESSIONS
+(
+Session_ID int primary key,
+Session_MEMBER_ID int,
+Session_TRAINER_ID int,
+Session_START_DATE date  not null,
+Session_END_DATE date  not null,
+Session_TIME time not null,
+constraint ghi foreign key smi(Session_MEMBER_ID) references MEMBER_DETAILS(Member_ID),
+constraint sko foreign key sti(Session_TRAINER_ID) references TRAINERS_DETAILS(Trainer_ID),
+constraint ssd check(Session_START_DATE < Session_END_DATE),
+constraint sdr check(Session_END_DATE > Session_START_DATE )
+);
+
+desc WORKOUT_SESSIONS
+
+
+-- 6th table
+create table FEEDBACK
+(
+Feedback_ID int primary key,
+Feedback_MEMBER_ID int,
+Feedback_TRAINER_ID int,
+Feedback varchar(100),
+Ratings_OUTOF_5 tinyint	,
+constraint qwe foreign key bnm(Feedback_MEMBER_ID) references MEMBER_DETAILS(Member_ID),
+constraint ghj foreign key kop(Feedback_TRAINER_ID) references TRAINERS_DETAILS(Trainer_ID)
+);
+
+desc FEEDBACK
+
+
+
+Inserting Values into Tables:
+
+-- 1st table : MEMBERSHIP_PLAN
+
+insert into MEMBERSHIP_PLAN values (1,'Basic','3 Months',3000,'Access to gym floor'),
+(2,'Standard','3 Months','7000','Gym + 2 Group Classes/Week'),
+(3,'Premium ','6 Months',10000,'Gym + 5 Group Classes/ Week'),
+(4,'Gold','6 Months',15000,'Premium Benefit + Nutrition Consultation'),
+(5,'Platinum','9 Months',20000,'All Access of Gold + Spa/ Sauna + Swimming Pool'),
+(6,'VIP', '12 Months', '35000',' All Access of Platinum + Personal Trainer + Priority scheduling');
+
+
+-- 2nd Table MEMBER_DETAILS
+
+insert into MEMBER_DETAILS VALUES
+(101,'Rahul Sharma',28,'Male',9876543210,'rahul@gmail.com',6),
+(102,'Priya Mehta',24,'Female',9876543211,'mehtaPriya@gmail.com',2),
+(103,'Arjun Singh',32,'Male',9876543212,'arjun@gamil.com',4),
+(104,'Sneha Patil',29,'Female',9876543213,'patilS@gmail.com',1),
+(105,'Karan Desai',22,'Male',9876543214,'karan@gmail.com',1),
+(106,'Neha Joshi',35,'Female',9876543215,'nehajoshi@gmail.com',6),
+(107,'Vikram Rao',40,'Male',9876543216,'raoviki@gmail.com',3),
+(108,'Anjali Gupta',45,'Female',9876543217,'anjaligupta@gmail.com',3),
+(109,'Pooja Shah',20,'Female',9876543221,'poojashah@gmail.com',2),
+(110,'Deepak Yadav',34,'Male',9876543220,'yadadvdeepak@gmail.com',4),
+(111,'Ritu Malhotra',29,'Female',9876543225,'ritu@gmail.com',6),
+(112,'Shreya Iyer',31,'Female',9876543227,'shreya@gmail.com',2),
+(113,'Mohit Bansal',20,'Male',9876543226,'mohit@gmail.com',6),
+(114,'Ashish Kulkarni',34,'Male',9876543230,'ashish@gmail.com',1 ),
+(115,'Sameer Malhotra',26,'Male',9876543236,'sameer@gmail.com',4),
+(116,'Rohit Chavan',50,'Male',9876543235,'rohit@gmail.com',6),
+(117,'Gaurav Saxena',47,'Male',9876543234,'gaurav@gmail.com',5),
+(118,'Divya Menon',39,'Other',9876543237,'divya@gmail.com',3),
+(119,'Aarti Chatterjee',26,'Other',9876543239,'aarti@gmail.com',2),
+(120,'Shruti Deshmukh',38,'Female',9876543238,'shruti@gmail.com',1);
+
+
+-- 3rd Table : TRAINERS_DETAILS
+
+Insert into TRAINERS_DETAILS values 
+(201, 'Amit Kumar', 9123456780, 20000, 'Male', 1),
+(202, 'Sunita Rao', 9123456781, 25000, 'Female', 2),
+(203, 'Rajesh Singh', 9123456782, 30000, 'Male', 3),
+(204, 'Neha Kapoor', 9123456783, 38000, 'Female', 4),
+(205, 'Anil Patil', 9123456784, 49000, 'Male', 5),
+(206, 'Kavita Joshi', 9123456785, 70000, 'Female', 6),
+(207,'Manoj Desai', 9123456786,72000,'Other',6),
+(208,'Aaysha shaikh',8567432019,50000,'Female',5);
+
+
+-- 4th Table : PAYMENTS_DETAILS
+
+INSERT INTO PAYMENTS_DETAILS (Payment_ID, Fee_AMOUNT, Member_ID, Payment_DATE, Payment_METHOD, Payment_STATUS) VALUES
+(301, 15000, 103, '2025-01-07', 'UPI', 'Fully Paid'),
+(302, 35000, 106, '2026-02-10', 'CASH', 'Partially Paid'),
+(303, 20000, 117, '2026-01-21', 'NET BANKING', 'Fully Paid'),
+(304, 15000, 110, '2026-03-14', 'CHEQUE', 'Fully Paid'),
+(305, 7000, 109, '2025-12-13', 'Pending', 'Not Paid'),
+(306, 7000, 102, '2025-10-06', 'CASH', 'Fully Paid'),
+(307, 35000, 111, '2025-07-15', 'UPI', 'Fully Paid'),
+(308, 15000, 115, '2026-03-19', 'NET BANKING', 'Partially Paid'),
+(309, 10000, 118, '2025-05-22', 'Pending', 'Not Paid'),
+(310, 20000, 112, '2026-01-16', 'CASH', 'Fully Paid'),
+(311, 35000, 101, '2026-03-05', 'NET BANKING', 'Partially Paid'),
+(312, 3000, 114, '2026-03-18', 'UPI', 'Fully Paid'),
+(313, 3000, 120, '2026-02-24', 'CHEQUE', 'Fully Paid'),
+(314, 10000, 108, '2026-02-12', 'CASH', 'Fully Paid'),
+(315, 10000, 107, '2025-11-11', 'UPI', 'Fully Paid'),
+(316, 35000, 116, '2026-01-20', 'NET BANKING', 'Fully Paid'),
+(317, 3000, 104, '2026-01-08', 'Pending', 'Not Paid'),
+(318, 20000, 119, '2026-02-23', 'CASH', 'Fully Paid'),
+(319, 3000, 105, '2025-12-09', 'UPI', 'Fully Paid'),
+(320, 35000, 113, '2025-01-17', 'NET BANKING', 'Partially Paid');
+
+alter table Payments_details add column Paid_AMOUNT decimal(10,2) after Fee_AMOUNT ;
+
+update Payments_details set Paid_AMOUNT = Fee_AMOUNT where Payment_STATUS = "Fully Paid";
+update Payments_details set Paid_AMOUNT = Fee_AMOUNT / 2 where Payment_STATUS = "Partially Paid";
+
+ 
+
+-- 5th table : WORKOUT_SESSIONS;
+
+INSERT INTO WORKOUT_SESSIONS VALUES 
+(1001,101,206,'2026-03-05','2027-03-05','07:00:00'),
+(1002,103,204,'2025-01-07','2025-07-07','10:30:00'),
+(1003,110,204,'2026-03-14','2026-09-14','14:00:00'),
+(1004,108,203,'2026-02-12','2026-08-12','08:00:00'),
+(1005,102,202,'2026-01-06','2026-04-06','13:00:00'),
+(1006,105,201,'2025-12-09','2026-03-09','11:00:00'),
+(1007,119,205,'2026-02-23','2026-11-23','13:00:00'),
+(1008,116,207,'2026-01-20','2027-01-20','18:00:00'),
+(1009,107,203,'2025-11-11','2026-05-11','14:00:00'),
+(1010,106,207,'2026-02-10','2027-02-10','06:00:00'),
+(1012,117,205,'2026-01-21','2026-09-21','17:30:00'),
+(1014,111,206,'2025-07-15','2026-07-15','09:00:00'),
+(1015,112,205,'2026-01-16','2026-10-16','13:00:00'),
+(1016,115,204,'2026-03-19','2026-09-19','14:00:00'),
+(1017,113,207,'2025-01-17','2026-01-17','07:00:00'),
+(1018,114,201,'2026-03-18','2026-06-18','17:00:00'),
+(1020,120,201,'2026-02-24','2026-05-24','11:00:00');
+ 
+
+insert into WORKOUT_SESSIONS (Session_ID ,Session_MEMBER_ID,Session_TRAINER_ID)
+values (1013,109,202), (1019,118,203),(1011,104,201);
+
+
+-- 6th Table : FEEDBACK
+
+insert into FEEDBACK values 
+(511,101,206,'Great energy, felt motivated.',4),
+(512,102,202,'punctual and professional every time.',5),
+(513,103,204,'Session was good but a bit rushed.',2),
+(515,106,207,'Excellent workout, felt stronger.',3),
+(516,107,203,'Could improve pacing.',2),
+(518,110,204,'Enjoyed the new exercises.',5),
+(519,111,206,'Trainer gave clear instructions.',4),
+(521,113,207,'Could use more warm-up time.',1),
+(522,114,201,'Trainer was very motivating.',5),
+(523,115,204,'Good balance of exercises.',4),
+(524,116,207,'Loved the intensity of the workout.',3),
+(525,117,205,'clear instructions make workouts easy to follow.',4),
+(526,119,205,'Trainer was excellent, very supportive.',4),
+(527,120,201,'Workout felt refreshing and effective.',5);
+
+insert into FEEDBACK (Feedback_ID, Feedback_MEMBER_ID) values(528,104),(529,109),(530,118);
+
+insert into feedback (Feedback_ID,Feedback_MEMBER_ID,Feedback_TRAINER_ID) values(514,105,201),(517,108,203),(520,112,205);
+
+
+
+Subqueries 
+
+Q.1 Display ID, Name, AGE, Gender of members whose age is greater than the average age of all members.
+
+SELECT Member_ID, Member_NAME, Member_AGE, Member_GENDER FROM Member_DETAILS WHERE Member_AGE > (SELECT AVG(Member_AGE) FROM Member_DETAILS);
+
+
+Q.2 List the details of  members who attended sessions with trainer earning second highest salary.
+
+SELECT * FROM MEMBER_DETAILS  WHERE Member_ID  IN ( SELECT  DISTINCT  Session_MEMBER_ID  FROM WORKOUT_SESSIONS  WHERE  Session_TRAINER_ID IN ( SELECT Trainer_ID FROM TRAINERS_DETAILS WHERE Trainer_SALARY = ( SELECT MAX( Trainer_SALARY ) FROM TRAINERS_DETAILS WHERE  Trainer_SALARY < (SELECT MAX(Trainer_SALARY) FROM TRAINERS_DETAILS))));
+
+
+Q.3 Display details of plan in which most member enrolled
+
+SELECT * FROM MEMBERSHIP_PLAN WHERE Plan_ID =   ( SELECT Member_PLAN_ID FROM MEMBER_DETAILS GROUP BY Member_PLAN_ID  ORDER BY COUNT( Member_ID ) DESC    LIMIT 1);
+
+Q.4 Write an SQL query to retrieve the details of all female members (ID, name, age, gender, and plan ID) who are enrolled in either the Gold, Platinum, or VIP membership plans. 
+
+SELECT Member_ID, Member_NAME, Member_AGE ,Member_GENDER, Member_PLAN_ID FROM MEMBER_DETAILS WHERE Member_GENDER ="Female" AND  Member_PLAN_ID IN(SELECT plan_id FROM MEMBERSHIP_PLAN WHERE Plan_NAME IN ('Gold','Platinum','VIP'));
+
+Q.5 Find Members detail whose Session End is between March 2026 to May 2026.
+
+SELECT * from MEMBER_DETAILS WHERE Member_ID IN (SELECT Session_MEMBER_ID FROM WORKOUT_SESSIONS WHERE Session_END_DATE BETWEEN '2026-03-01' AND '2026-05-31');
+
+
+JOINS:
+
+Q.1 Write an SQL query to display each member’s ID, name (in ascending order), the membership plan they belong to (in descending order), their fee amount, payment status, and contact details. The query should return only those members whose payment status is either Not Paid or Partially Paid.
+
+SELECT m.Member_ID, m.Member_NAME, m.Member_EMAIL,m.Member_CONTACT, mp.Plan_NAME , p.Fee_AMOUNT, p.Paid_AMOUNT, p.Payment_STATUS FROM MEMBER_DETAILS m  INNER JOIN  PAYMENTS_DETAILS P  ON m.Member_ID = p.Member_ID  INNER JOIN MEMBERSHIP_PLAN mp ON Member_PLAN_ID = mp.Plan_ID WHERE Payment_STATUS IN ("Not Paid","Partially Paid") ORDER BY mp.Plan_NAME desc, m.Member_NAME ASC ;
+
+Q.2 Write an SQL query to list all members’ names, their contact details, and their trainer’s name, but only include those members who have a trainer assigned and who have not given any feedback ratings. Members without a trainer should not be included in the result set.
+
+SELECT  m.Member_ID,  m.Member_NAME,    m.Member_CONTACT,   t.Trainer_NAME,    f.Ratings_OUTOF_5 FROM MEMBER_DETAILS m INNER JOIN WORKOUT_SESSIONS ws ON m.Member_ID = ws.Session_MEMBER_ID INNER JOIN TRAINERS_DETAILS t  ON ws.Session_TRAINER_ID = t.Trainer_ID LEFT JOIN FEEDBACK f ON m.Member_ID = f.Feedback_MEMBER_ID  WHERE f.Ratings_OUTOF_5 IS NULL ORDER BY m.Member_ID ASC;
+
+
+Q.3 Write an SQL query to produce a ranked report of trainers that includes: Total members they trained, Average rating (rounded to 1 decimal place) ,Rank based on average rating using DENSE_RANK()
+
+SELECT  t.Trainer_ID, t.Trainer_NAME,  
+COUNT(DISTINCT ws.Session_MEMBER_ID) AS Total_Members_Trained,      
+ROUND(AVG(f.Ratings_OUTOF_5), 1) AS Average_Ratings,  
+ CASE         
+WHEN AVG(f.Ratings_OUTOF_5) IS NULL THEN 'Ratings not given'        
+ELSE CAST(DENSE_RANK() OVER (ORDER BY AVG(f.Ratings_OUTOF_5) DESC) AS CHAR)    
+END AS Rating_RANK
+FROM TRAINERS_DETAILS t LEFT JOIN WORKOUT_SESSIONS ws     
+ON t.Trainer_ID = ws.Session_TRAINER_ID
+LEFT JOIN FEEDBACK f  
+ON ws.Session_TRAINER_ID = f.Feedback_TRAINER_ID
+GROUP BY t.Trainer_ID, t.Trainer_NAME 
+ORDER BY Average_Ratings DESC;
+
+
+Q. 4 Write a SQL query to display each membership plan’s name, price, total number of members enrolled, and the total revenue collected from those members.
+
+SELECT  p.Plan_ID,    p.Plan_NAME,    p.Plan_PRICE,    COUNT(m.Member_ID) AS Total_Members,    SUM(pd.Paid_AMOUNT) AS Total_Revenue 
+FROM membership_plan p 
+LEFT JOIN member_details m   
+ON p.Plan_ID = m.Member_PLAN_ID  
+LEFT JOIN payments_details pd    
+ON m.Member_ID = pd.Member_ID 
+GROUP BY p.Plan_ID, p.Plan_NAME, p.Plan_PRICE 
+ORDER BY Total_Revenue DESC;
+
+
+Q.5 Write an SQL query to display each member’s ID, name, workout session timing, session end date, and trainer name. The query should return only those members who belong to the VIP membership plan and who have been assigned a trainer. 
+
+SELECT m.Member_ID,    m.Member_NAME,    ws.Session_TIME,    ws.Session_END_DATE,    t.Trainer_NAME
+FROM MEMBER_DETAILS m  INNER JOIN MEMBERSHIP_PLAN mp  ON m.Member_PLAN_ID = mp.Plan_ID
+INNER JOIN WORKOUT_SESSIONS ws  ON m.Member_ID = ws.Session_MEMBER_ID  INNER JOIN TRAINERS_DETAILS t    
+ON  ws.Session_TRAINER_ID = t.Trainer_ID  WHERE mp.Plan_NAME = 'VIP’   ORDER BY m.Member_NAME ASC;
+
+
+Q.6 Display the details of trainers, the ratings they have received (only those who have less than 2), and the membership plan they belong to
+
+SELECT     t.Trainer_ID,    t.Trainer_NAME,    t.Trainer_CONTACT,    t.Trainer_SALARY,    t.Trainer_GENDER,    f.Ratings_OUTOF_5,    p.Plan_NAME  FROM TRAINERS_DETAILS t JOIN FEEDBACK f     
+ON t.Trainer_ID = f.Feedback_TRAINER_ID  JOIN MEMBERSHIP_PLAN p  ON t.Trainer_PLAN_ID = p.Plan_ID
+WHERE f.Ratings_OUTOF_5 < 3;
+
+
